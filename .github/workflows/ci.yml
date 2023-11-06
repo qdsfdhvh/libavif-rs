@@ -54,8 +54,8 @@ jobs:
       - name: cargo clippy --all --examples
         run: cargo clippy --all --examples
 
-  test:
-    name: test / ${{ matrix.name }}
+  build:
+    name: build / ${{ matrix.name }}
     runs-on: ${{ matrix.os || 'ubuntu-20.04' }}
 
     strategy:
@@ -156,3 +156,10 @@ jobs:
         env:
           CC: 'emcc'
           CXX: 'emcc'
+      
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.target }}
+          path: target/${{ matrix.target }}/release/*
+          if-no-files-found: error
