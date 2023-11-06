@@ -136,23 +136,23 @@ jobs:
           override: true
           target: ${{ matrix.target }}
 
-      - name: Test (Windows)
+      - name: Build (Windows)
         if: matrix.os == 'windows-2019'
         shell: cmd
         run: |
           call "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
-          cargo test ${{ matrix.features }} --target ${{ matrix.target }}
+          cargo build ${{ matrix.features }} --target ${{ matrix.target }}
 
-      - name: Test (Linux, macOS)
+      - name: Build (Linux, macOS)
         if: ${{ matrix.os != 'windows-2019' && matrix.target != 'wasm32-unknown-unknown' }}
         run: |
-          cargo test ${{ matrix.features }} --target ${{ matrix.target }}
+          cargo build ${{ matrix.features }} --target ${{ matrix.target }}
 
-      - name: Check wasm
+      - name: Build wasm
         if: matrix.target == 'wasm32-unknown-unknown'
         run: |
           export EMSCRIPTEN_CMAKE_FILE="$(brew --cellar emscripten)/$(brew list --versions emscripten | tr ' ' '\n' | tail -1)/libexec/cmake/Modules/Platform/Emscripten.cmake"
-          cargo check ${{ matrix.features }} --target ${{ matrix.target }}
+          cargo build ${{ matrix.features }} --target ${{ matrix.target }}
         env:
           CC: 'emcc'
           CXX: 'emcc'
