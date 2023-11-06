@@ -13,7 +13,7 @@ env:
 jobs:
   rustfmt:
     name: rustfmt / linux / stable
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout
@@ -33,7 +33,7 @@ jobs:
 
   clippy:
     name: clippy / linux / stable
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout
@@ -55,8 +55,8 @@ jobs:
         run: cargo clippy --all --examples
 
   build:
-    name: build / ${{ matrix.name }}
-    runs-on: ${{ matrix.os || 'ubuntu-20.04' }}
+    name: test / ${{ matrix.name }}
+    runs-on: ${{ matrix.os || 'ubuntu-22.04' }}
 
     strategy:
       fail-fast: false
@@ -74,8 +74,8 @@ jobs:
           - name: linux / nightly
             rust: nightly
             target: x86_64-unknown-linux-gnu
-          - name: linux / 1.58.1
-            rust: 1.58.1
+          - name: linux / 1.63
+            rust: 1.63
             target: x86_64-unknown-linux-gnu
           - name: macOS / stable
             os: macOS-latest
@@ -103,7 +103,7 @@ jobs:
           submodules: true
 
       - name: Install dependencies (linux)
-        if: (matrix.os || 'ubuntu-20.04') == 'ubuntu-20.04'
+        if: (matrix.os || 'ubuntu-22.04') == 'ubuntu-22.04'
         run: |
           DEBIAN_FRONTEND=noninteractive sudo apt-get update
           DEBIAN_FRONTEND=noninteractive sudo apt-get install -y ninja-build nasm meson

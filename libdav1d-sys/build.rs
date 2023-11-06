@@ -22,6 +22,11 @@ fn main() {
             .arg("--cross-file")
             .arg(cwd.join("crossfiles/".to_owned() + target.as_str() + ".meson"));
     }
+    if target == "aarch64-unknown-linux-gnu" {
+        meson
+            .arg("--cross-file")
+            .arg("aarch64-unknown-linux-gnu.meson");
+    }
 
     let s = meson
         .arg("--default-library=static")
