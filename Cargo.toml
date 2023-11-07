@@ -36,6 +36,3 @@ members = [
   "libaom-sys",
   "libdav1d-sys",
 ]
-
-[lib]
-crate-type = ["staticlib", "cdylib"]
