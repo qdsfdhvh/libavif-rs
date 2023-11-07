@@ -54,7 +54,7 @@ jobs:
       - name: cargo clippy --all --examples
         run: cargo clippy --all --examples
 
-  build:
+  test:
     name: test / ${{ matrix.name }}
     runs-on: ${{ matrix.os || 'ubuntu-22.04' }}
 
@@ -136,30 +136,23 @@ jobs:
           override: true
           target: ${{ matrix.target }}
 
-      - name: Build (Windows)
+      - name: Test (Windows)
         if: matrix.os == 'windows-2019'
         shell: cmd
         run: |
           call "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
-          cargo build ${{ matrix.features }} --target ${{ matrix.target }}
+          cargo test ${{ matrix.features }} --target ${{ matrix.target }}
 
-      - name: Build (Linux, macOS)
+      - name: Test (Linux, macOS)
         if: ${{ matrix.os != 'windows-2019' && matrix.target != 'wasm32-unknown-unknown' }}
         run: |
-          cargo build ${{ matrix.features }} --target ${{ matrix.target }}
+          cargo test ${{ matrix.features }} --target ${{ matrix.target }}
 
-      - name: Build wasm
+      - name: Test wasm
         if: matrix.target == 'wasm32-unknown-unknown'
         run: |
           export EMSCRIPTEN_CMAKE_FILE="$(brew --cellar emscripten)/$(brew list --versions emscripten | tr ' ' '\n' | tail -1)/libexec/cmake/Modules/Platform/Emscripten.cmake"
-          cargo build ${{ matrix.features }} --target ${{ matrix.target }}
+          cargo test ${{ matrix.features }} --target ${{ matrix.target }}
         env:
           CC: 'emcc'
           CXX: 'emcc'
-      
-      - name: Upload
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ matrix.target }}
-          path: target/${{ matrix.target }}/debug/*
-          if-no-files-found: error
