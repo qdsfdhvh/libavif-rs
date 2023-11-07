@@ -5,7 +5,7 @@ use image::DynamicImage;
 
 fn main() {
     let input = env::args().nth(1).expect("input png");
-    let img = image::open(&input).expect("opening");
+    let img = image::open(input).expect("opening");
 
     let data = match img {
         DynamicImage::ImageRgb8(img) => {
